@@ -1,32 +1,28 @@
-const express = require('express');
-const path = require('path');
-const hbs = require('hbs');
-const serverless = require('serverless-http');
+const { log } = require("console");
+const express = require("express");
+const path = require("path");
+const hbs = require("hbs");
 
 const app = express();
+const staticpath = path.join(__dirname, "../public");
+const templatepath = path.join(__dirname, '../templates/views');
+const partialspath = path.join(__dirname, '../templates/partials');
 
-// Define paths for views and partials
-const viewsPath = path.join(__dirname, '../templates/views');
-const partialsPath = path.join(__dirname, '../templates/partials');
+app.set("view engine", "hbs");
+app.set('views', templatepath);
+hbs.registerPartials(partialspath);
+app.use(express.static(staticpath));
 
-// Set up Handlebars
-app.set('view engine', 'hbs');
-app.set('views', viewsPath);
-hbs.registerPartials(partialsPath);
-
-// Serve static files
-app.use(express.static(path.join(__dirname, '../public')));
-
-// Define routes
-app.get('/', (req, res) => {
-  res.render('index');
-});
-app.get('/commands', (req, res) => {
-  res.render('commands');
-});
-app.get('/contacts', (req, res) => {
-  res.render('contacts');
+app.get("/", (req, res) => {
+    res.render("index");
 });
 
-// Export the serverless function
-module.exports.handler = serverless(app);
+app.get("/commands", (req, res) => {
+    res.render("commands");
+});
+
+app.get("/contacts", (req, res) => {
+    res.render("contacts");
+});
+
+module.exports = app;
