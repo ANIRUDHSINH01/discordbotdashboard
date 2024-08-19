@@ -1,4 +1,4 @@
-const { log } = require("console");
+const serverless = require('serverless-http');
 const express = require("express");
 const path = require("path");
 const hbs = require("hbs");
@@ -25,4 +25,5 @@ app.get("/contacts", (req, res) => {
     res.render("contacts");
 });
 
-module.exports = app;
+
+module.exports.handler = serverless(app);
