@@ -1,23 +1,28 @@
-const express = require('express');
-const exphbs = require('express-handlebars');
+const { log } = require("console");
+const express = require("express");
+const path = require("path");
+const hbs = require("hbs");
 
 const app = express();
+const staticpath = path.join(__dirname, "../public");
+const templatepath = path.join(__dirname, '../templates/views');
+const partialspath = path.join(__dirname, '../templates/partials');
 
-// Set up Handlebars
-app.engine('hbs', exphbs({ extname: '.hbs' }));
-app.set('view engine', 'hbs');
-app.set('views', './templates/views');
+app.set("view engine", "hbs");
+app.set('views', templatepath);
+hbs.registerPartials(partialspath);
+app.use(express.static(staticpath));
 
-// Serve static files
-app.use(express.static('public'));
-
-// Define a route
-app.get('/', (req, res) => {
-  res.render('index');
+app.get("/", (req, res) => {
+    res.render("index");
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.get("/commands", (req, res) => {
+    res.render("commands");
 });
+
+app.get("/contacts", (req, res) => {
+    res.render("contacts");
+});
+
+module.exports = app;
